@@ -171,13 +171,17 @@ async def gsearch(q_event):
         match_ = q_event.pattern_match.group(1)
         match = quote_plus(match_)
         result = ""
-        for i in search(match, stop=10):
-            soup = bs4.BeautifulSoup(get(i).content, 'html.parser')
-            title = soup.title.string
-            result += f"{title}\n{i}"
-            result += "\n\n"
+        for i in search(match, stop=20):
+            try:
+                soup = bs4.BeautifulSoup(get(i).content, 'html.parser')
+                title = soup.title.string
+                result += f"{title}\n{i}"
+                result += f"{title}\n{i}"
+                result += "\n\n"
+            except:
+                continue
         await q_event.edit(
-            "**Search Query:**\n`" + match_ + "`\n\n**Result:**\n" + result,
+            "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n\n" + result,
             link_preview = False
         )
         if BOTLOG:
@@ -474,7 +478,7 @@ async def yt_search(video_q):
             result += f"{unescape(video['snippet']['title'])} \
                 \nhttps://www.youtube.com/watch?v={video['id']['videoId']}\n\n"
 
-        reply_text = f"**Search Query:**\n`{query}`\n\n**Result:**\n{result}"
+        reply_text = f"**Search Query:**\n`{query}`\n\n**Results:**\n\n{result}"
 
         await video_q.edit(reply_text)
 
