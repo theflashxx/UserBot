@@ -188,8 +188,8 @@ async def gsearch(q_event):
         for i, link in enumerate(links):
             try:
                 for i in range(1, 11):
-                    title = driver.find_element_by_xpath(f"//div[@id='rso']/div/div/div[{i}]/div/div/div/a/h3/div").getText()
-                    link = driver.find_element_by_xpath(f"xpath=//div[@id='rso']/div/div/div[{i}]/div/div/div/a/div/cite").getText()
+                    title = driver.find_element_by_xpath(f"//div[@id='rso']/div/div/div[{i}]/div/div/div/a/h3/div").text
+                    link = driver.find_element_by_xpath(f"//div[@id='rso']/div/div/div[{i}]/div/div/div/a/div/cite").text
                     result += f"**{title}**\n{link}"
                     result += "\n"
             except:
