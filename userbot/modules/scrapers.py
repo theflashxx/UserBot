@@ -172,10 +172,13 @@ async def gsearch(q_event):
         match = quote_plus(match_)
         result = ""
         for i in search(match, stop=10):
-            result += i
-            result += "\n"
+            soup = BeautifulSoup(get(i).content, 'html.parser')
+            title = soup.title.string
+            result += f"{title}\n{i}"
+            result += "\n\n"
         await q_event.edit(
-            "**Search Query:**\n`" + match_ + "`\n\n**Result:**\n" + result
+            "**Search Query:**\n`" + match_ + "`\n\n**Result:**\n" + result,
+            link_preview = False
         )
         if BOTLOG:
             await q_event.client.send_message(
@@ -433,7 +436,7 @@ async def translateme(trans):
         if BOTLOG:
             await trans.client.send_message(
                 BOTLOG_CHATID,
-                f"Translate query was executed successfully",
+                f"Translated some {source_lan.title()} stuff to {transl_lan.title()} just now.",
             )
 
 
@@ -456,7 +459,6 @@ async def yt_search(video_q):
     if not video_q.text[0].isalpha() and video_q.text[0] not in ("/", "#", "@", "!"):
         query = video_q.pattern_match.group(1)
         result = ''
-        i = 1
 
         if not YOUTUBE_API_KEY:
             await video_q.edit("`Error: YouTube API key missing! Add it to environment vars or config.env.`")
@@ -469,9 +471,8 @@ async def yt_search(video_q):
 
 
         for video in videos_json:
-            result += f"{i}. {unescape(video['snippet']['title'])} \
-                \nhttps://www.youtube.com/watch?v={video['id']['videoId']}\n"
-            i += 1
+            result += f"{unescape(video['snippet']['title'])} \
+                \nhttps://www.youtube.com/watch?v={video['id']['videoId']}\n\n"
 
         reply_text = f"**Search Query:**\n`{query}`\n\n**Result:**\n{result}"
 
