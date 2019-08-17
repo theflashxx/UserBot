@@ -12,6 +12,7 @@ import bs4
 import re
 from time import sleep
 from html import unescape
+from bs4 import BeautifulSoup
 from re import findall
 from datetime import datetime
 from selenium import webdriver
