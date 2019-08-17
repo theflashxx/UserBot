@@ -8,7 +8,7 @@
 
 import os
 import shutil
-import bs4
+from bs4 import BeautifulSoup, SoupStrainer
 import re
 from time import sleep
 from html import unescape
@@ -171,11 +171,11 @@ async def gsearch(q_event):
         match_ = q_event.pattern_match.group(1)
         match = quote_plus(match_)
         result = ""
-        for i in search(match, stop=20):
+        for i in search(match, stop=10):
             try:
-                soup = bs4.BeautifulSoup(get(i).content, 'html.parser')
+                title_selector = SoupStrainer('title')
+                soup = BeautifulSoup(get(i).content, 'html.parser')
                 title = soup.title.string
-                result += f"{title}\n{i}"
                 result += f"{title}\n{i}"
                 result += "\n\n"
             except:
@@ -339,12 +339,12 @@ async def imdb(e):
             final_name = '+'.join(remove_space)
             page = get("https://www.imdb.com/find?ref_=nv_sr_fn&q="+final_name+"&s=all")
             lnk = str(page.status_code)
-            soup = bs4.BeautifulSoup(page.content,'lxml')
+            soup = BeautifulSoup(page.content,'lxml')
             odds = soup.findAll("tr","odd")
             mov_title = odds[0].findNext('td').findNext('td').text
             mov_link = "http://www.imdb.com/"+odds[0].findNext('td').findNext('td').a['href']
             page1 = get(mov_link)
-            soup = bs4.BeautifulSoup(page1.content,'lxml')
+            soup = BeautifulSoup(page1.content,'lxml')
             if soup.find('div','poster'):
     	        poster = soup.find('div','poster').img['src']
             else:
