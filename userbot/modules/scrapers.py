@@ -15,6 +15,8 @@ from html import unescape
 from re import findall
 from datetime import datetime
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 from urllib.parse import quote_plus
 from urllib.error import HTTPError
 from asyncio import create_subprocess_shell as asyncsh
