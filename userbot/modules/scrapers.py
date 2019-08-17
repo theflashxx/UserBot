@@ -171,12 +171,12 @@ async def gsearch(q_event):
         match_ = q_event.pattern_match.group(1)
         match = quote_plus(match_)
         result = ""
-        for i in search(match, stop=10):
+        for i in search(match, stop=10, only_standard = True):
             try:
                 title_selector = SoupStrainer('title')
                 soup = BeautifulSoup(get(i).content, 'lxml')
                 title = soup.title.string
-                result += f"{title}\n{i}"
+                result += f"**{title}**\nLink: {i}"
                 result += "\n\n"
             except:
                 continue
@@ -476,7 +476,7 @@ async def yt_search(video_q):
 
         for video in videos_json:
             result += f"{unescape(video['snippet']['title'])} \
-                \nhttps://www.youtube.com/watch?v={video['id']['videoId']}\n\n"
+                \nLink: https://www.youtube.com/watch?v={video['id']['videoId']}\n\n"
 
         reply_text = f"**Search Query:**\n`{query}`\n\n**Results:**\n\n{result}"
 
