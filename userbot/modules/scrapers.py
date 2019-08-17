@@ -174,7 +174,7 @@ async def gsearch(q_event):
         for i in search(match, stop=10):
             try:
                 title_selector = SoupStrainer('title')
-                soup = BeautifulSoup(get(i).content, 'html.parser')
+                soup = BeautifulSoup(get(i).content, 'lxml')
                 title = soup.title.string
                 result += f"{title}\n{i}"
                 result += "\n\n"
