@@ -15,8 +15,6 @@ from html import unescape
 from re import findall
 from datetime import datetime
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
 from urllib.parse import quote_plus
 from urllib.error import HTTPError
 from asyncio import create_subprocess_shell as asyncsh
@@ -71,7 +69,7 @@ async def carbon_api(e):
    chrome_options.add_argument("--window-size=1920x1080")
    chrome_options.add_argument("--disable-dev-shm-usage")
    chrome_options.add_argument("--no-sandbox")
-   chrome_options.add_argument('--disable-gpu')
+   chrome_options.add_argument("--disable-gpu")
    prefs = {'download.default_directory' : './'}
    chrome_options.add_experimental_option('prefs', prefs)
    await e.edit("Processing 30%")
@@ -103,6 +101,7 @@ async def carbon_api(e):
          )
 
    os.remove('./carbon.png')
+   driver.quit()
    # Removing carbon.png after uploading
    await e.delete() # Deleting msg
 
@@ -168,7 +167,6 @@ async def _(event):
 @register(outgoing=True, pattern=r"^.google (.*)")
 async def gsearch(q_event):
     """ For .google command, do a Google search. """
-    # Thanks to: © Gegham Zakaryan, 2019 for the scraper.
     if not q_event.text[0].isalpha() and q_event.text[0] not in (
             "/", "#", "@", "!"):
         match_ = q_event.pattern_match.group(1)
@@ -181,19 +179,16 @@ async def gsearch(q_event):
         chrome_options.add_argument("--disable-gpu")
         chrome_options.binary_location = GOOGLE_CHROME_BIN
         driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
-        base_url = "https://www.google.com/search?q="
-        full_url = base_url + match
-        driver.get(full_url)
-        links = driver.find_elements(By.XPATH, "//DIV[@class='rc']/DIV[@class='r']/a")
-        for i, link in enumerate(links):
+        for i in search(match, stop=10, only_standard = True):
             try:
-                for i in range(1, 11):
-                    title = driver.find_element_by_xpath(f"//div[@id='rso']/div/div/div[{i}]/div/div/div/a/h3/div").text
-                    link = driver.find_element_by_xpath(f"//div[@id='rso']/div/div/div[{i}]/div/div/div/a/div/cite").text
-                    result += f"**{title}**\n{link}"
-                    result += "\n"
+                driver.get(url)
+                title = driver.title
+                result += f"**{title}**\n{i}\n\n"
+                driver.close()
             except:
                 continue
+            finally:
+                driver.quit()
         await q_event.edit(
             "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n\n" + result,
             link_preview = False
