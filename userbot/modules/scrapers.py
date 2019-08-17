@@ -187,9 +187,10 @@ async def gsearch(q_event):
         links = driver.find_elements(By.XPATH, "//DIV[@class='rc']/DIV[@class='r']/a")
         for i, link in enumerate(links):
             try:
-                if i < 10:
-                    result += f"{i+1}. {link.find_elements(By.XPATH, '//h3')[i].get_attribute('innerText')}"
-                    result += link.get_attribute('href')
+                for i in range(1, 11):
+                    title = driver.find_element_by_xpath(f"//div[@id='rso']/div/div/div[{i}]/div/div/div/a/h3/div").getText()
+                    link = driver.find_element_by_xpath(f"xpath=//div[@id='rso']/div/div/div[{i}]/div/div/div/a/div/cite").getText()
+                    result += f"**{title}**\n{link}"
                     result += "\n"
             except:
                 continue
