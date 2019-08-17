@@ -12,7 +12,6 @@ import bs4
 import re
 from time import sleep
 from html import unescape
-from bs4 import BeautifulSoup
 from re import findall
 from datetime import datetime
 from selenium import webdriver
@@ -173,7 +172,7 @@ async def gsearch(q_event):
         match = quote_plus(match_)
         result = ""
         for i in search(match, stop=10):
-            soup = BeautifulSoup(get(i).content, 'html.parser')
+            soup = bs4.BeautifulSoup(get(i).content, 'html.parser')
             title = soup.title.string
             result += f"{title}\n{i}"
             result += "\n\n"
