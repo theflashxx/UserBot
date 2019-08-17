@@ -173,11 +173,8 @@ async def gsearch(q_event):
         result = ""
         for i in search(match, stop=10, only_standard = True):
             try:
-                title_selector = SoupStrainer('title')
-                soup = BeautifulSoup(get(i, timeout = 5).content, 'lxml')
-                title = soup.title.string
-                result += f"**{title}**\nLink: {i}"
-                result += "\n\n"
+                soup = BeautifulSoup(get(i, timeout = 2).content)
+                result += f"**{soup.title.string}**\n{i}\n\n"
             except:
                 continue
         await q_event.edit(
@@ -476,7 +473,7 @@ async def yt_search(video_q):
 
         for video in videos_json:
             result += f"{unescape(video['snippet']['title'])} \
-                \nLink: https://www.youtube.com/watch?v={video['id']['videoId']}\n\n"
+                \nhttps://www.youtube.com/watch?v={video['id']['videoId']}\n\n"
 
         reply_text = f"**Search Query:**\n`{query}`\n\n**Results:**\n\n{result}"
 
