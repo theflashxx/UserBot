@@ -56,8 +56,7 @@ async def mention_afk(mention):
             AFKREASON = gvarstatus("AFK_REASON")
             
         except AttributeError:
-            global ISAFK
-            global AFKREASON
+            pass
         
         if ISAFK:
             if mention.sender_id not in USERS:
@@ -105,12 +104,6 @@ async def afk_on_pm(sender):
             apprv = is_approved(sender.sender_id)
             
         except AttributeError:
-            global ISAFK
-            global AFKREASON
-            
-            # Since we not using SQL db
-            # We approve all PM's (duh !)
-            
             apprv = True
         
         if apprv and ISAFK:
@@ -155,8 +148,6 @@ async def set_afk(afk_e):
             AFK_DB = True
             
         except AttributeError:
-            global ISAFK
-            global AFKREASON
             AFK_DB = False
             
         REASON = afk_e.pattern_match.group(1)
@@ -193,8 +184,6 @@ async def type_afk_is_not_true(notafk):
         AFKREASON = gvarstatus("AFK_REASON")
         AFK_DB = True
     except AttributeError:
-        global ISAFK
-        global AFKREASON
         AFK_DB = False
         
     if ISAFK:
