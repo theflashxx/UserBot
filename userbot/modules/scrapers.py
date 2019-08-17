@@ -82,12 +82,12 @@ async def carbon_api(e):
    command_result = driver.execute("send_command", params)
 
    driver.find_element_by_xpath("//button[contains(text(),'Export')]").click()
-   sleep(5) # this might take a bit.
+   sleep(2.5) # this might take a bit.
    driver.find_element_by_xpath("//button[contains(text(),'4x')]").click()
-   sleep(5)
+   sleep(2.5)
    await e.edit("Processing 50%")
    driver.find_element_by_xpath("//button[contains(text(),'PNG')]").click()
-   sleep(5) #Waiting for downloading
+   sleep(2.5) #Waiting for downloading
 
    await e.edit("Processing 90%")
    file = './carbon.png'
@@ -166,15 +166,29 @@ async def _(event):
 @register(outgoing=True, pattern=r"^.google (.*)")
 async def gsearch(q_event):
     """ For .google command, do a Google search. """
+    # Thanks to: © Gegham Zakaryan, 2019 for the scraper.
     if not q_event.text[0].isalpha() and q_event.text[0] not in (
             "/", "#", "@", "!"):
         match_ = q_event.pattern_match.group(1)
         match = quote_plus(match_)
         result = ""
-        for i in search(match, stop=10, only_standard = True):
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.binary_location = GOOGLE_CHROME_BIN
+        driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
+        base_url = "https://www.google.com/search?q="
+        full_url = base_url + match
+        driver.get(full_url)
+        links = driver.find_elements(By.XPATH, "//DIV[@class='rc']/DIV[@class='r']/a")
+        for i, link in enumerate(links):
             try:
-                soup = BeautifulSoup(get(i, timeout = 2).content)
-                result += f"**{soup.title.string}**\n{i}\n\n"
+                if i < 10:
+                    result += f"{i+1}. {link.find_elements(By.XPATH, '//h3')[i].get_attribute('innerText')}"
+                    result += link.get_attribute('href')
+                    result += "\n"
             except:
                 continue
         await q_event.edit(
