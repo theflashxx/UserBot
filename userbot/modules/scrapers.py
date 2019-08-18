@@ -17,8 +17,6 @@ from datetime import datetime
 from selenium import webdriver
 from urllib.parse import quote_plus
 from urllib.error import HTTPError
-from asyncio import create_subprocess_shell as asyncsh
-from asyncio.subprocess import PIPE as asyncsh_PIPE
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
 from wikipedia import summary
