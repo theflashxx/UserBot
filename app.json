@@ -23,7 +23,7 @@
       "value": ""
     },
     "STRING_SESSION": {
-      "description": "[REQUIRED] Get this value by running python3 string_session.py in app console.",
+      "description": "Get this value by running [python3 string_session.py] in Termux or local system.",
       "value": ""
     },
     "CHROME_DRIVER": {
