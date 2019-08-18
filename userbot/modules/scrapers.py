@@ -182,7 +182,6 @@ async def gsearch(q_event):
                 await sleep(3)
                 title = driver.title
                 result += f"**{title}**\n{i}\n\n"
-                driver.close()
             except Exception as e:
                 print(str(e))
                 continue
