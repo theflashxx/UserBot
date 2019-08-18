@@ -52,7 +52,7 @@ async def setlang(prog):
 async def carbon_api(e):
  if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
    """ A Wrapper for carbon.now.sh """
-   await e.edit("Processing...")
+   await e.edit("`Processing..`")
    CARBON = 'https://carbon.now.sh/?l={lang}&code={code}'
    global CARBONLANG
    textx = await e.get_reply_message()
@@ -62,6 +62,7 @@ async def carbon_api(e):
    elif textx:
          pcode = str(textx.message) # Importing message to module
    code = quote_plus(pcode) # Converting to urlencoded
+   await e.edit("`Processing..\n25%`")
    url = CARBON.format(code=code, lang=CARBONLANG)
    chrome_options = Options()
    chrome_options.add_argument("--headless")
@@ -72,26 +73,22 @@ async def carbon_api(e):
    chrome_options.add_argument("--disable-gpu")
    prefs = {'download.default_directory' : './'}
    chrome_options.add_experimental_option('prefs', prefs)
-   await e.edit("Processing 30%")
-
    driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
    driver.get(url)
+   await e.edit("`Processing..\n50%`")
    download_path = './'
    driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
    params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': download_path}}
    command_result = driver.execute("send_command", params)
-
    driver.find_element_by_xpath("//button[contains(text(),'Export')]").click()
-   sleep(2.5) # this might take a bit.
    driver.find_element_by_xpath("//button[contains(text(),'4x')]").click()
-   sleep(2.5)
-   await e.edit("Processing 50%")
    driver.find_element_by_xpath("//button[contains(text(),'PNG')]").click()
-   sleep(2.5) #Waiting for downloading
-
-   await e.edit("Processing 90%")
+   await e.edit("`Processing..\n75%`")
+   # Waiting for downloading
+   sleep(2.5)
+   await e.edit("`Processing..\n100%`")
    file = './carbon.png'
-   await e.edit("Done!!")
+   await e.edit("`Uploading..`")
    await e.client.send_file(
          e.chat_id,
          file,
@@ -185,7 +182,8 @@ async def gsearch(q_event):
                 title = driver.title
                 result += f"**{title}**\n{i}\n\n"
                 driver.close()
-            except:
+            except Exception as e:
+                print(str(e))
                 continue
             finally:
                 driver.quit()
