@@ -62,6 +62,10 @@
       "description": "OCR API Key for .ocr command Get from https://ocr.space/ocrapi",
       "required": false
     },
+    "REM_BG_API_KEY": {
+      "description": "API Key for .ocr command Get from https://www.remove.bg/api",
+      "required": false
+    },
     "ANTI_SPAMBOT": {
       "description": "Kicks spambots from groups after they join. [Requires admin powers in groups to kick.]",
       "value": "False"
