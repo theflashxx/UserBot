@@ -8,7 +8,7 @@
 
 import os
 import shutil
-from bs4 import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup
 import re
 from time import sleep
 from html import unescape
@@ -161,31 +161,23 @@ async def _(event):
         ms = (end - start).seconds
 
 
-@register(outgoing=True, pattern=r"^.google (.*)")
+@register(outgoing=True, pattern=r"^.search (.*)")
 async def gsearch(q_event):
     """ For .google command, do a Google search. """
     if not q_event.text[0].isalpha() and q_event.text[0] not in (
             "/", "#", "@", "!"):
         match_ = q_event.pattern_match.group(1)
         match = quote_plus(match_)
+        if not match:
+            await q_event.edit("`I can't search nothing !!`")
+            return
+        plain_txt = requests.get(f"https://www.startpage.com/do/search?cmd=process_search&query={match}", 'html').text
+        soup = BeautifulSoup(plain_txt, "lxml")
         result = ""
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.binary_location = GOOGLE_CHROME_BIN
-        driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
-        for i in search(match, stop=10):
-            try:
-                driver.get(i)
-                await sleep(3)
-                title = driver.title
-                result += f"**{title}**\n{i}\n\n"
-                driver.quit()
-            except Exception as e:
-                print(str(e))
-                continue
+        for result in soup.find_all('a', {'class': 'w-gl__result-title'}):
+            title = result.text
+            link = result.get('href')
+            result += f"**{title}**{link}"
         await q_event.edit(
             "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n\n" + result,
             link_preview = False
@@ -193,7 +185,7 @@ async def gsearch(q_event):
         if BOTLOG:
             await q_event.client.send_message(
                 BOTLOG_CHATID,
-                "Google Search query `" + match_ + "` was executed successfully",
+                "Search query `" + match_ + "` was executed successfully",
             )
 
 @register(outgoing=True, pattern=r"^.wiki (.*)")
@@ -617,8 +609,8 @@ CMD_HELP.update({
         \nUsage: Beautify your code using carbon.now.sh\nUse .crblang <text> to set language for your code.'
 })
 CMD_HELP.update({
-    'google': '.google <query>\
-        \nUsage: Does a search on Google.'
+    'search': '.search <query>\
+        \nUsage: Does a search on StartPage.'
 })
 CMD_HELP.update({
     'wiki': '.wiki <query>\
