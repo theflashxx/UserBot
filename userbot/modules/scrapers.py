@@ -177,9 +177,9 @@ async def gsearch(q_event):
         for result in soup.find_all('a', {'class': 'w-gl__result-title'}):
             title = result.text
             link = result.get('href')
-            msg += f"**{title}**{link}"
+            msg += f"**{title}**{link}\n"
         await q_event.edit(
-            "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n\n" + msg,
+            "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n" + msg,
             link_preview = False
         )
         if BOTLOG:
