@@ -182,11 +182,10 @@ async def gsearch(q_event):
                 await sleep(3)
                 title = driver.title
                 result += f"**{title}**\n{i}\n\n"
+                driver.quit()
             except Exception as e:
                 print(str(e))
                 continue
-            finally:
-                driver.quit()
         await q_event.edit(
             "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n\n" + result,
             link_preview = False
