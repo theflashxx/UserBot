@@ -173,13 +173,13 @@ async def gsearch(q_event):
             return
         plain_txt = get(f"https://www.startpage.com/do/search?cmd=process_search&query={match}", 'html').text
         soup = BeautifulSoup(plain_txt, "lxml")
-        result = ""
+        msg = ""
         for result in soup.find_all('a', {'class': 'w-gl__result-title'}):
             title = result.text
             link = result.get('href')
-            result += f"**{title}**{link}"
+            msg += f"**{title}**{link}"
         await q_event.edit(
-            "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n\n" + result,
+            "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n\n" + msg,
             link_preview = False
         )
         if BOTLOG:
