@@ -149,11 +149,11 @@ async def _(event):
                     rebmun = round(number * current_rate, 2)
                     await event.edit("{} {} = {} {}".format(number, currency_from, rebmun, currency_to))
                 else:
-                    await event.edit("IDEKNOWTDWTT")
+                    await event.edit("`This seems to be some alien currency, which I can't convert right now.`")
             except e:
                 await event.edit(str(e))
         else:
-            await event.edit("`.currency number from to`")
+            await event.edit("`Invalid syntax.`")
         end = datetime.now()
         ms = (end - start).seconds
 
