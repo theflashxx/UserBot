@@ -22,7 +22,7 @@ async def kbg(remob):
             reply_message = await remob.get_reply_message()
             await remob.edit("`Processing..`")
             try:
-                if isinstance(message.media, MessageMediaPhoto) or "image" in message.media.document.mime_type.split('/'):
+                if isinstance(reply_message.media, MessageMediaPhoto) or "image" in reply_message.media.document.mime_type.split('/'):
                     downloaded_file_name = await remob.client.download_media(
                         reply_message,
                         TEMP_DOWNLOAD_DIRECTORY
