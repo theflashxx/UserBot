@@ -178,7 +178,7 @@ async def gsearch(q_event):
         driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
         for i in search(match, stop=10, only_standard = True):
             try:
-                driver.get(url)
+                driver.get(i)
                 title = driver.title
                 result += f"**{title}**\n{i}\n\n"
                 driver.close()
