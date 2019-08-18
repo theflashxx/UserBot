@@ -25,7 +25,6 @@ from wikipedia import summary
 from wikipedia.exceptions import DisambiguationError, PageError
 from urbandict import define
 from requests import get
-from googlesearch import search
 from google_images_download import google_images_download
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -168,9 +167,6 @@ async def gsearch(q_event):
             "/", "#", "@", "!"):
         match_ = q_event.pattern_match.group(1)
         match = quote_plus(match_)
-        if not match:
-            await q_event.edit("`I can't search nothing !!`")
-            return
         plain_txt = get(f"https://www.startpage.com/do/search?cmd=process_search&query={match}", 'html').text
         soup = BeautifulSoup(plain_txt, "lxml")
         msg = ""
