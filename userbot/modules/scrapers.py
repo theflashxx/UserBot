@@ -167,15 +167,18 @@ async def gsearch(q_event):
         match = quote_plus(match_)
         plain_txt = get(f"https://www.startpage.com/do/search?cmd=process_search&query={match}", 'html').text
         soup = BeautifulSoup(plain_txt, "lxml")
+        
         msg = ""
         for result in soup.find_all('a', {'class': 'w-gl__result-title'}):
             title = result.text
             link = result.get('href')
-            msg += f"⁍[{title}]({link})"
+            msg += f"{title}\n{link}"
+            
         await q_event.edit(
             "**Search Query:**\n`" + match_ + "`\n\n**Results:**\n" + msg,
             link_preview = False
         )
+        
         if BOTLOG:
             await q_event.client.send_message(
                 BOTLOG_CHATID,
@@ -469,7 +472,7 @@ async def yt_search(video_q):
         for video in videos_json:
             title = f"{unescape(video['snippet']['title'])}"
             link = f"https://youtu.be/{video['id']['videoId']}"
-            result += f"[{title}]({link})\n\n"
+            result += f"{title}\n{link}\n\n"
 
         reply_text = f"**Search Query:**\n`{query}`\n\n**Results:**\n\n{result}"
 
