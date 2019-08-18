@@ -171,7 +171,7 @@ async def gsearch(q_event):
         if not match:
             await q_event.edit("`I can't search nothing !!`")
             return
-        plain_txt = requests.get(f"https://www.startpage.com/do/search?cmd=process_search&query={match}", 'html').text
+        plain_txt = get(f"https://www.startpage.com/do/search?cmd=process_search&query={match}", 'html').text
         soup = BeautifulSoup(plain_txt, "lxml")
         result = ""
         for result in soup.find_all('a', {'class': 'w-gl__result-title'}):
