@@ -469,7 +469,7 @@ async def yt_search(video_q):
         for video in videos_json:
             title = f"{unescape(video['snippet']['title'])}"
             link = f"https://youtu.be/{video['id']['videoId']}"
-            result += f"[{title}]({link})"
+            result += f"[{title}]({link})\n\n"
 
         reply_text = f"**Search Query:**\n`{query}`\n\n**Results:**\n\n{result}"
 
