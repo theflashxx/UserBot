@@ -13,7 +13,7 @@ ua = UserAgent()
 
 @register(outgoing=True, pattern=r"^.bomb (.*)")
 async def bomb(event):
-    if event.fwd_From:
+    if event.fwd_from:
         return
     target = event.pattern_match.group(1)
     await event.edit("`Bombing : `"+target)
